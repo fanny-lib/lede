@@ -61,13 +61,13 @@ jobs:
          cd package
          mkdir openwrt-packages
          cd openwrt-packages
-         git clone https://github.com/fw876/helloworld
-         git clone https://github.com/openwrt-develop/luci-theme-atmaterial.git
-         git clone https://github.com/xiaorouji/openwrt-passwall
-         git clone https://github.com/jerrykuku/luci-theme-argon.git
       
       - name: Update feeds
         run: |
+          echo 'src-git helloworld https://github.com/fw876/helloworld' >> ./feeds.conf.default
+          echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>./feeds.conf.default
+          echo 'src-git argon https://github.com/jerrykuku/luci-theme-argon.git' >>./feeds.conf.default
+          sed -i 's/\"#src-git\"/\"src-git\"/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       - name: Generate configuration file
@@ -206,8 +206,7 @@ jobs:
           EOF
           # LuCI主题:
           cat >> .config <<EOF
-          CONFIG_PACKAGE_luci-theme-argon-dark-mod=y
-          CONFIG_PACKAGE_luci-theme-argon-light-mod=y
+          CONFIG_PACKAGE_luci-theme-argon=y
           CONFIG_PACKAGE_luci-theme-material=y
           CONFIG_PACKAGE_luci-theme-netgear=y
           EOF
